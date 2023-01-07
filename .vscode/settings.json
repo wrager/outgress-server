@@ -1,0 +1,16 @@
+{
+  "editor.tabCompletion": "on",
+  "eslint.rules.customizations": [
+    {
+      "rule": "prettier/prettier",
+      "severity": "off"
+    }
+  ],
+  "editor.rulers": [80],
+  "files.exclude": {
+    "node_modules": true,
+    "build": true
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
