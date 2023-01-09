@@ -139,8 +139,6 @@ export class OsmParser {
         selector: string,
         element: ParentNode = this.document,
     ): readonly Element[] {
-        const nodeList = element.querySelectorAll(selector);
-
-        return [...nodeList];
+        return [...element.querySelectorAll(selector)];
     }
 }

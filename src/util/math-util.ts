@@ -6,12 +6,19 @@ export class MathUtil {
     }
 
     public static round(value: number, digits: number): number {
+        if (!Number.isFinite(value)) {
+            throw new Error('Invalid "value" argument.');
+        }
+        if (digits < 0 || !Number.isSafeInteger(digits)) {
+            throw new Error('Invalid "digits" argument.');
+        }
+
         const multiplier = 10 ** digits;
 
         return Math.round(value * multiplier) / multiplier;
     }
 
-    private static sum(values: readonly number[]): number {
+    public static sum(values: readonly number[]): number {
         return values.reduce(
             (previousValue, currentValue) => previousValue + currentValue,
             0,
