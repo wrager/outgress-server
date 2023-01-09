@@ -1,4 +1,4 @@
-export class Coordinates {
+export class Location {
     public readonly latitude: number;
     public readonly longitude: number;
 

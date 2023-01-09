@@ -1,12 +1,12 @@
-import { Coordinates } from './coordinates';
+import { Location } from './location';
 
 export class Portal {
-    public readonly coordinates: Coordinates;
+    public readonly location: Location;
     public readonly name: string;
     public readonly type: string;
 
-    public constructor(coordinates: Coordinates, name: string, type: string) {
-        this.coordinates = coordinates;
+    public constructor(location: Location, name: string, type: string) {
+        this.location = location;
         this.name = name;
         this.type = type;
     }
