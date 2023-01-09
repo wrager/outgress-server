@@ -6,7 +6,7 @@ import { Portal } from '../src/portal';
 describe('OsmParser', () => {
     let osmParser: OsmParser;
 
-    test('Should throw on invalid file', async () => {
+    test('should throw on invalid file', async () => {
         await expect(async () =>
             new OsmParser(path.resolve(__dirname, 'NOT_EXISTING_FILE')).read(),
         ).rejects.toThrow();
@@ -15,7 +15,7 @@ describe('OsmParser', () => {
         ).rejects.toThrow();
     });
 
-    describe('', () => {
+    describe('should parse the valid file', () => {
         beforeEach(async () => {
             osmParser = new OsmParser(path.resolve('data', 'map.osm'));
             await osmParser.read();

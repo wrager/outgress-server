@@ -103,19 +103,13 @@ export class OsmParser {
 
         const latitudes = locations.map((location) => location.latitude);
         const centerLatitude = MathUtil.round(
-            MathUtil.average([
-                Math.min(...latitudes),
-                Math.max(...latitudes),
-            ]) ?? 0,
+            MathUtil.average(Math.min(...latitudes), Math.max(...latitudes)),
             OsmParser.locationPrecision,
         );
 
         const longitudes = locations.map((location) => location.longitude);
         const centerLongitude = MathUtil.round(
-            MathUtil.average([
-                Math.min(...longitudes),
-                Math.max(...longitudes),
-            ]) ?? 0,
+            MathUtil.average(Math.min(...longitudes), Math.max(...longitudes)),
             OsmParser.locationPrecision,
         );
 

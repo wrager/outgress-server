@@ -1,13 +1,11 @@
 export class MathUtil {
-    public static average(values: readonly number[]): number | undefined {
-        return values.length > 0
-            ? MathUtil.sum(values) / values.length
-            : undefined;
+    public static average(value1: number, ...rest: readonly number[]): number {
+        return MathUtil.sum(value1, ...rest) / (rest.length + 1);
     }
 
     public static round(value: number, digits: number): number {
         if (!Number.isFinite(value)) {
-            throw new Error('Invalid "value" argument.');
+            return value;
         }
         if (digits < 0 || !Number.isSafeInteger(digits)) {
             throw new Error('Invalid "digits" argument.');
@@ -18,7 +16,7 @@ export class MathUtil {
         return Math.round(value * multiplier) / multiplier;
     }
 
-    public static sum(values: readonly number[]): number {
+    public static sum(...values: readonly number[]): number {
         return values.reduce(
             (previousValue, currentValue) => previousValue + currentValue,
             0,
