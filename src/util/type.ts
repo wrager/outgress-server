@@ -1,17 +1,27 @@
 export class Type {
-    public static assertDefined<T>(expression: T): NonNullable<T> {
+    public static assert<T>(expression: T): asserts expression {
+        if (!expression) {
+            throw Type.getAssertionError();
+        }
+    }
+
+    public static defined<T>(expression: T): NonNullable<T> {
         if (expression === null || expression === undefined) {
-            throw new Error('Assert defined: error');
+            throw Type.getAssertionError();
         }
 
         return expression;
     }
 
-    public static assertNotNan(num: number): number {
+    public static notNan(num: number): number {
         if (Number.isNaN(num)) {
-            throw new Error('Assert not NaN: error');
+            throw Type.getAssertionError();
         }
 
         return num;
+    }
+
+    private static getAssertionError(): Error {
+        return new Error('Assertion error');
     }
 }

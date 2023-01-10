@@ -1,12 +1,54 @@
-import path from 'path';
 import Koa from 'koa';
-import { Db } from './db';
+import path from 'path';
+import { Location } from './location';
+import { OsmXmlMapData } from './map-data/osm-xml-map-data';
 import { OsmParser } from './osm-parser';
+import { OutgressCore } from './outgress-core';
+import { NumberUtil } from './util/number-util';
+import { Type } from './util/type';
 
 export class OutgressServer {
+    private static readonly osmXmlFilePath = path.resolve(
+        process.cwd(),
+        'data',
+        'map.osm',
+    );
     private static readonly port = 3000;
+
+    private core: OutgressCore | undefined;
     private readonly app = new Koa();
-    private readonly db = new Db();
+
+    private static response(
+        context: Koa.ParameterizedContext,
+        type: string,
+        body: string,
+        status: number,
+    ): void {
+        context.type = type;
+        context.body = body;
+        context.status = status;
+    }
+
+    private static responseHtml(
+        context: Koa.ParameterizedContext,
+        html: string,
+        status = 200,
+    ): void {
+        this.response(context, 'text/html', html, status);
+    }
+
+    private static responseJson(
+        context: Koa.ParameterizedContext,
+        data: object,
+        status = 200,
+    ): void {
+        this.response(
+            context,
+            'application/json',
+            JSON.stringify(data),
+            status,
+        );
+    }
 
     private static print(message: string): void {
         // eslint-disable-next-line no-console
@@ -14,6 +56,7 @@ export class OutgressServer {
     }
 
     public start(): void {
+        this.initCore();
         this.initEndpoints();
         this.app.listen(OutgressServer.port);
 
@@ -22,19 +65,49 @@ export class OutgressServer {
         );
     }
 
+    private async initCore(): Promise<void> {
+        const mapData = new OsmXmlMapData(OutgressServer.osmXmlFilePath);
+        await mapData.init();
+
+        this.core = new OutgressCore(mapData);
+    }
+
     private initEndpoints(): void {
         this.app.use(async (context) => {
             if (context.request.path === '/parse-data') {
-                const parser = new OsmParser(
-                    path.resolve(process.cwd(), 'data', 'map.osm'),
-                );
+                const parser = new OsmParser(OutgressServer.osmXmlFilePath);
                 await parser.read();
-                context.type = 'application/json';
-                context.body = JSON.stringify(parser.getPortals());
-            } else {
-                context.body = '<h1>404</h1><h2>not found</h2>';
-                context.status = 404;
+
+                OutgressServer.responseJson(context, parser.getPortals());
+
+                return;
             }
+
+            if (context.request.path.startsWith('/core/')) {
+                Type.assert(this.core);
+
+                if (context.request.path === '/core/user-map') {
+                    const latitude = NumberUtil.tryParseFloat(
+                        String(context.request.query.latitude),
+                    );
+                    const longitude = NumberUtil.tryParseFloat(
+                        String(context.request.query.longitude),
+                    );
+
+                    OutgressServer.responseJson(
+                        context,
+                        this.core.getUserMap(new Location(latitude, longitude)),
+                    );
+
+                    return;
+                }
+            }
+
+            OutgressServer.responseHtml(
+                context,
+                `<h1>404</h1><p>not found</p>`,
+                404,
+            );
         });
     }
 }

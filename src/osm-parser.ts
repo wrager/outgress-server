@@ -3,6 +3,7 @@ import jsdom from 'jsdom';
 import { Location } from './location';
 import { Portal } from './portal';
 import { MathUtil } from './util/math-util';
+import { NumberUtil } from './util/number-util';
 import { Type } from './util/type';
 
 export class OsmParser {
@@ -24,27 +25,6 @@ export class OsmParser {
         return this.xml.window.document;
     }
 
-    private static tryParseNumber(
-        string: string | null,
-        parseFn: (string: string) => number,
-    ): number {
-        if (string === null) {
-            throw new Error(`Could not parse number "${String(string)}".`);
-        }
-
-        return Type.assertNotNan(parseFn(string));
-    }
-
-    private static tryParseFloat(str: string | null): number {
-        return OsmParser.tryParseNumber(str, parseFloat);
-    }
-
-    private static tryParseInt(string: string | null): number {
-        return OsmParser.tryParseNumber(string, (str: string): number =>
-            parseInt(str, 10),
-        );
-    }
-
     public async read(): Promise<void> {
         const dataFileContents = await fs.promises.readFile(
             this.filePath,
@@ -58,7 +38,7 @@ export class OsmParser {
     public getPortals(): readonly Portal[] {
         return this.querySelectorAll('way > tag[k="historic"]').map((tag) => {
             const location = this.getWayNodeLocation(
-                Type.assertDefined(tag.parentElement),
+                Type.defined(tag.parentElement),
             );
 
             if (location === undefined) {
@@ -73,7 +53,7 @@ export class OsmParser {
                 location,
                 this.querySelector(
                     'tag[k="name"]',
-                    Type.assertDefined(tag.parentElement),
+                    Type.defined(tag.parentElement),
                 ).getAttribute('v') ?? '',
                 tag.getAttribute('v') ?? '',
             );
@@ -84,8 +64,8 @@ export class OsmParser {
         const node = this.querySelector(`node[id="${id}"]`);
 
         return new Location(
-            OsmParser.tryParseFloat(node.getAttribute('lat')),
-            OsmParser.tryParseFloat(node.getAttribute('lon')),
+            NumberUtil.tryParseFloat(node.getAttribute('lat')),
+            NumberUtil.tryParseFloat(node.getAttribute('lon')),
         );
     }
 
@@ -93,7 +73,7 @@ export class OsmParser {
         const ndNodes = this.querySelectorAll('nd', node);
         const locations = ndNodes.map((ndNode) =>
             this.getRefLocation(
-                OsmParser.tryParseInt(ndNode.getAttribute('ref')),
+                NumberUtil.tryParseInt(ndNode.getAttribute('ref')),
             ),
         );
 
