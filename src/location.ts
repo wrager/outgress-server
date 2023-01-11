@@ -1,3 +1,5 @@
+import { MathUtil } from './util/math-util';
+
 export class Location {
     public static readonly precision = 7;
 
@@ -5,7 +7,25 @@ export class Location {
     public readonly longitude: number;
 
     public constructor(latitude: number, longitude: number) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.latitude = MathUtil.round(latitude, Location.precision);
+        this.longitude = MathUtil.round(longitude, Location.precision);
+    }
+
+    public get latitudeRadians(): number {
+        return MathUtil.degreesToRadians(this.latitude);
+    }
+
+    public get longitudeRadians(): number {
+        return MathUtil.degreesToRadians(this.longitude);
+    }
+
+    public static fromRadians(
+        latitudeRadians: number,
+        longitudeRadians: number,
+    ): Location {
+        return new Location(
+            MathUtil.radiansToDegrees(latitudeRadians),
+            MathUtil.radiansToDegrees(longitudeRadians),
+        );
     }
 }

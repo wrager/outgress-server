@@ -3,7 +3,7 @@ import { MapData } from './map-data/map-data';
 import { UserMap } from './user-map';
 
 export class OutgressCore {
-    private static readonly visibilityDistanceMeters = 100;
+    private static readonly visibilityDistanceMeters = 1000;
 
     private readonly mapData: MapData;
 
@@ -11,9 +11,9 @@ export class OutgressCore {
         this.mapData = mapData;
     }
 
-    public getUserMap(location: Location): UserMap {
+    public async getUserMap(location: Location): Promise<UserMap> {
         return new UserMap(
-            this.mapData.getPortalsNear(
+            await this.mapData.getPortalsNear(
                 location,
                 OutgressCore.visibilityDistanceMeters,
             ),

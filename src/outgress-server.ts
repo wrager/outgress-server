@@ -2,6 +2,7 @@ import Koa from 'koa';
 import path from 'path';
 import { Location } from './location';
 import { OsmXmlMapData } from './map-data/osm-xml-map-data';
+import { OverpassMapData } from './map-data/overpass-map-data';
 import { OsmParser } from './osm-parser';
 import { OutgressCore } from './outgress-core';
 import { NumberUtil } from './util/number-util';
@@ -15,7 +16,9 @@ export class OutgressServer {
     );
     private static readonly port = 3000;
 
-    private core: OutgressCore | undefined;
+    private osmXmlMapDataCore: OutgressCore | undefined;
+    private overpassMapDataCore: OutgressCore | undefined;
+
     private readonly app = new Koa();
 
     private static response(
@@ -39,7 +42,7 @@ export class OutgressServer {
 
     private static responseJson(
         context: Koa.ParameterizedContext,
-        data: object,
+        data: object, // TODO: exclude Promise
         status = 200,
     ): void {
         this.response(
@@ -66,10 +69,11 @@ export class OutgressServer {
     }
 
     private async initCore(): Promise<void> {
-        const mapData = new OsmXmlMapData(OutgressServer.osmXmlFilePath);
-        await mapData.init();
+        const osmXmlMapData = new OsmXmlMapData(OutgressServer.osmXmlFilePath);
+        await osmXmlMapData.init();
+        this.osmXmlMapDataCore = new OutgressCore(osmXmlMapData);
 
-        this.core = new OutgressCore(mapData);
+        this.overpassMapDataCore = new OutgressCore(new OverpassMapData());
     }
 
     private initEndpoints(): void {
@@ -84,7 +88,11 @@ export class OutgressServer {
             }
 
             if (context.request.path.startsWith('/core/')) {
-                Type.assert(this.core);
+                const core =
+                    context.request.query['data-source'] === 'overpass'
+                        ? this.overpassMapDataCore
+                        : this.osmXmlMapDataCore;
+                Type.assert(core);
 
                 if (context.request.path === '/core/user-map') {
                     const latitude = NumberUtil.tryParseFloat(
@@ -96,7 +104,9 @@ export class OutgressServer {
 
                     OutgressServer.responseJson(
                         context,
-                        this.core.getUserMap(new Location(latitude, longitude)),
+                        await core.getUserMap(
+                            new Location(latitude, longitude),
+                        ),
                     );
 
                     return;

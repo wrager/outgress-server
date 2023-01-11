@@ -1,4 +1,4 @@
-import { Geo } from '../geo';
+import { Geo } from '../geo/geo';
 import { Location } from '../location';
 import { OsmParser } from '../osm-parser';
 import { Portal } from '../portal';
@@ -15,10 +15,11 @@ export class OsmXmlMapData implements MapData {
         await this.parser.read();
     }
 
-    public getPortalsNear(
+    // eslint-disable-next-line @typescript-eslint/require-await
+    public async getPortalsNear(
         location: Location,
         radiusMeters: number,
-    ): readonly Portal[] {
+    ): Promise<readonly Portal[]> {
         const portals = this.parser.getPortals();
 
         return portals.filter(

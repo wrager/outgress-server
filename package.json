@@ -26,6 +26,7 @@
     "@types/jest": "29.2.5",
     "@types/jsdom": "20.0.1",
     "@types/koa": "2.13.5",
+    "@types/node-fetch": "2.6.2",
     "eslint": "8.31.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "17.0.0",
@@ -39,6 +40,7 @@
   "dependencies": {
     "jsdom": "21.0.0",
     "koa": "2.14.1",
+    "node-fetch": "2.6.7",
     "sequelize": "6.28.0",
     "sqlite3": "5.1.4"
   }
