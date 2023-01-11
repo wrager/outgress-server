@@ -2,13 +2,11 @@ import fs from 'fs';
 import jsdom from 'jsdom';
 import { Location } from './location';
 import { Portal } from './portal';
-import { MathUtil } from './util/math-util';
 import { NumberUtil } from './util/number-util';
 import { Type } from './util/type';
+import { Way } from './way';
 
 export class OsmParser {
-    private static readonly locationPrecision: number = 7;
-
     private readonly encoding = 'utf8';
     private readonly filePath: string;
     private xml: jsdom.JSDOM | undefined;
@@ -37,20 +35,10 @@ export class OsmParser {
 
     public getPortals(): readonly Portal[] {
         return this.querySelectorAll('way > tag[k="historic"]').map((tag) => {
-            const location = this.getWayNodeLocation(
-                Type.defined(tag.parentElement),
-            );
-
-            if (location === undefined) {
-                throw new Error(
-                    `Unknown location of way "${String(
-                        tag.parentElement?.getAttribute('id'),
-                    )}".`,
-                );
-            }
+            const way = this.getWayFromNode(Type.defined(tag.parentElement));
 
             return new Portal(
-                location,
+                way.center,
                 this.querySelector(
                     'tag[k="name"]',
                     Type.defined(tag.parentElement),
@@ -69,31 +57,18 @@ export class OsmParser {
         );
     }
 
-    private getWayNodeLocation(node: ParentNode): Location | undefined {
+    private getWayFromNode(node: ParentNode): Way {
         const ndNodes = this.querySelectorAll('nd', node);
         const locations = ndNodes.map((ndNode) =>
             this.getRefLocation(
                 NumberUtil.tryParseInteger(ndNode.getAttribute('ref')),
             ),
         );
-
         if (locations.length === 0) {
             throw new Error(`Unknown location of node ${String(node)}.`);
         }
 
-        const latitudes = locations.map((location) => location.latitude);
-        const centerLatitude = MathUtil.round(
-            MathUtil.average(Math.min(...latitudes), Math.max(...latitudes)),
-            OsmParser.locationPrecision,
-        );
-
-        const longitudes = locations.map((location) => location.longitude);
-        const centerLongitude = MathUtil.round(
-            MathUtil.average(Math.min(...longitudes), Math.max(...longitudes)),
-            OsmParser.locationPrecision,
-        );
-
-        return new Location(centerLatitude, centerLongitude);
+        return new Way(locations);
     }
 
     private querySelector(
