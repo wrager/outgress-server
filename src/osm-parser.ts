@@ -73,7 +73,7 @@ export class OsmParser {
         const ndNodes = this.querySelectorAll('nd', node);
         const locations = ndNodes.map((ndNode) =>
             this.getRefLocation(
-                NumberUtil.tryParseInt(ndNode.getAttribute('ref')),
+                NumberUtil.tryParseInteger(ndNode.getAttribute('ref')),
             ),
         );
 
