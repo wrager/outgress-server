@@ -1,8 +1,10 @@
 import fs from 'fs';
 import jsdom from 'jsdom';
 import { Location } from './location';
-import { Portal } from './portal';
+import { Portal } from './model/portal/portal';
+import { PortalType } from './model/portal-type/portal-type';
 import { NumberUtil } from './util/number-util';
+import { StringUtil } from './util/string-util';
 import { Type } from './util/type';
 import { Way } from './way';
 
@@ -43,7 +45,10 @@ export class OsmParser {
                     'tag[k="name"]',
                     Type.defined(tag.parentElement),
                 ).getAttribute('v') ?? '',
-                tag.getAttribute('v') ?? '',
+                new PortalType(
+                    StringUtil.capitalize(Type.defined(tag.getAttribute('v'))),
+                    Type.defined(tag.getAttribute('v')),
+                ),
             );
         });
     }

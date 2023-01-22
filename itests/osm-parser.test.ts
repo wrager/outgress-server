@@ -1,9 +1,10 @@
 import path from 'path';
 import { Location } from '../src/location';
 import { OsmParser } from '../src/osm-parser';
-import { Portal } from '../src/portal';
+import { Portal } from '../src/model/portal/portal';
+import { PortalType } from '../src/model/portal-type/portal-type';
 
-describe('OsmParser', () => {
+describe('OsmParser itests', () => {
     let osmParser: OsmParser;
 
     test('should throw on invalid file', async () => {
@@ -26,22 +27,22 @@ describe('OsmParser', () => {
                 new Portal(
                     new Location(56.6373714, 47.9005106),
                     'Царево-кокшайский кремль',
-                    'castle',
+                    new PortalType('Castle', 'castle'),
                 ),
                 new Portal(
                     new Location(56.6364712, 47.8887489),
                     'Памяти жертв радиационных катастроф и аварий',
-                    'memorial',
+                    new PortalType('Memorial', 'memorial'),
                 ),
                 new Portal(
                     new Location(56.6370914, 47.8890852),
                     'Павшим в локальных войнах',
-                    'memorial',
+                    new PortalType('Memorial', 'memorial'),
                 ),
                 new Portal(
                     new Location(56.6314078, 47.9141778),
                     'Палантаю (И.С. Ключникову)',
-                    'memorial',
+                    new PortalType('Memorial', 'memorial'),
                 ),
             ]);
         });

@@ -1,5 +1,5 @@
-import { Location } from '../location';
-import { MathUtil } from '../util/math-util';
+import { Location } from '../../../location';
+import { MathUtil } from '../../../util/math-util';
 
 export class Geo {
     private static readonly earthRadiusMeters = 6371000;

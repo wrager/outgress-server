@@ -1,4 +1,4 @@
-import { Portal } from './portal';
+import { Portal } from './model/portal/portal';
 
 export class UserMap {
     public readonly portals: readonly Portal[];

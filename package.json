@@ -10,7 +10,7 @@
     "start": "ts-node src/index.ts",
     "test:i": "jest itests",
     "test:u": "jest src",
-    "test": "npm run test:u && npm run test:i"
+    "test": "jest src itests"
   },
   "repository": {
     "type": "git",

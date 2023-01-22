@@ -1,5 +1,5 @@
 import { Location } from '../location';
-import { Portal } from '../portal';
+import { Portal } from '../model/portal/portal';
 
 export interface MapData {
     getPortalsNear(

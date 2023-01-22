@@ -1,14 +1,15 @@
 import fetch from 'node-fetch';
-import { GeoBox } from '../geo/geo-box';
+import { GeoBox } from '../db/model/geo/geo-box';
 import { Location } from '../location';
-import { Portal } from '../portal';
+import { Portal } from '../model/portal/portal';
 import { ArrayUtil } from '../util/array-util';
 import { Type } from '../util/type';
 import { MapData } from './map-data';
 import { Way } from '../way';
+import { PortalType } from '../model/portal-type/portal-type';
 
 export class OverpassMapData implements MapData {
-    private static readonly url = 'https://overpass-api.de/api/interpreter';
+    private readonly url = 'https://overpass-api.de/api/interpreter';
 
     public async getPortalsNear(
         location: Location,
@@ -90,7 +91,7 @@ export class OverpassMapData implements MapData {
                 return new Portal(
                     new Way(wayLocations).center,
                     wayDefinition.tags.name,
-                    waySubtype,
+                    new PortalType(waySubtype.toUpperCase(), waySubtype),
                 );
             }),
         );
@@ -106,7 +107,7 @@ export class OverpassMapData implements MapData {
             params.append(name, value);
         });
 
-        const result = await fetch(OverpassMapData.url, {
+        const result = await fetch(this.url, {
             headers: {
                 'content-type':
                     'application/x-www-form-urlencoded; charset=UTF-8',

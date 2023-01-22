@@ -25,12 +25,12 @@
         "@typescript-eslint/prefer-readonly": "error",
         "@typescript-eslint/prefer-reduce-type-parameter": "error",
         "@typescript-eslint/prefer-return-this-type": "warn",
-        "@typescript-eslint/require-await": "error",
+        "@typescript-eslint/require-await": "warn",
         "@typescript-eslint/require-array-sort-compare": "warn",
         "@typescript-eslint/restrict-template-expressions": "warn",
         "class-methods-use-this": "warn",
         "import/prefer-default-export": "off",
-        "no-console": "error",
+        "no-console": "warn",
         "no-unused-private-class-members": "error"
     }
 }

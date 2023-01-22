@@ -1,7 +1,7 @@
-import { Geo } from '../geo/geo';
+import { Geo } from '../db/model/geo/geo';
 import { Location } from '../location';
 import { OsmParser } from '../osm-parser';
-import { Portal } from '../portal';
+import { Portal } from '../model/portal/portal';
 import { MapData } from './map-data';
 
 export class OsmXmlMapData implements MapData {
