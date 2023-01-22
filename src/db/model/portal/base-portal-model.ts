@@ -28,4 +28,12 @@ export class BasePortalModel extends Model<
             portalType: portalTypeId,
         });
     }
+
+    public toData(): PortalData {
+        return {
+            latitude: this.latitude,
+            longitude: this.longitude,
+            name: this.name,
+        };
+    }
 }

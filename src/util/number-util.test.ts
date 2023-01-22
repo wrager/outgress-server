@@ -27,6 +27,12 @@ describe('NumberUtil', () => {
             expect(() => NumberUtil.tryParseFloat('undefined')).toThrow(
                 'The string "undefined" is not a float number.',
             );
+            expect(() => NumberUtil.tryParseFloat('1,2')).toThrow(
+                'The string "1,2" is not a float number.',
+            );
+            expect(() => NumberUtil.tryParseFloat('1;2')).toThrow(
+                'The string "1;2" is not a float number.',
+            );
         });
 
         test('should parse the valid float number', () => {
@@ -79,6 +85,12 @@ describe('NumberUtil', () => {
             );
             expect(() => NumberUtil.tryParseInteger('undefined')).toThrow(
                 'The string "undefined" is not an integer number.',
+            );
+            expect(() => NumberUtil.tryParseInteger('1,2')).toThrow(
+                'The string "1,2" is not an integer number.',
+            );
+            expect(() => NumberUtil.tryParseInteger('1;2')).toThrow(
+                'The string "1;2" is not an integer number.',
             );
         });
 

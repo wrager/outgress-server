@@ -2,7 +2,6 @@ export class NumberUtil {
     public static tryParseFloat(string: string | null): number {
         return NumberUtil.tryParseNumber(
             string,
-            parseFloat,
             `The string "${String(string)}" is not a float number.`,
         );
     }
@@ -12,7 +11,7 @@ export class NumberUtil {
             string,
         )}" is not an integer number.`;
 
-        const result = NumberUtil.tryParseNumber(string, parseFloat, message);
+        const result = NumberUtil.tryParseNumber(string, message);
 
         if (!Number.isInteger(result)) {
             throw new Error(message);
@@ -23,14 +22,13 @@ export class NumberUtil {
 
     private static tryParseNumber(
         string: string | null,
-        parseFn: (string: string) => number,
         message: string,
     ): number {
-        if (string === null) {
+        if (!string) {
             throw new Error(message);
         }
 
-        const result = parseFn(string);
+        const result = Number(string);
         if (Number.isNaN(result) || !Number.isFinite(result)) {
             throw new Error(message);
         }

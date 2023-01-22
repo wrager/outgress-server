@@ -22,4 +22,11 @@ export class BasePortalTypeModel extends Model<
             osmType: portalType.osmType,
         });
     }
+
+    public toData(): PortalTypeData {
+        return {
+            name: this.name,
+            osmType: this.osmType,
+        };
+    }
 }

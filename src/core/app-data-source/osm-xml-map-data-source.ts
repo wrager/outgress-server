@@ -1,10 +1,10 @@
-import { Geo } from '../db/model/geo/geo';
-import { Location } from '../location';
-import { OsmParser } from '../osm-parser';
-import { Portal } from '../model/portal/portal';
-import { MapData } from './map-data';
+import { Location } from '../../location';
+import { Geo } from '../../model/geo/geo';
+import { Portal } from '../../model/portal/portal';
+import { OsmParser } from '../../osm-parser';
+import { MapDataSource } from './map-data-source';
 
-export class OsmXmlMapData implements MapData {
+export class OsmXmlMapDataSource implements MapDataSource {
     private readonly parser: OsmParser;
 
     public constructor(filePath: string) {

@@ -116,11 +116,6 @@ export class Database {
         await this.sequelize.close();
     }
 
-    public async dropAndSync(): Promise<void> {
-        await this.sequelize.drop();
-        await this.sequelize.sync();
-    }
-
     public initEmptyDb(): Promise<void> {
         return this.init(true);
     }

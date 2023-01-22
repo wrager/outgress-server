@@ -1,15 +1,20 @@
 import fetch from 'node-fetch';
-import { GeoBox } from '../db/model/geo/geo-box';
-import { Location } from '../location';
-import { Portal } from '../model/portal/portal';
-import { ArrayUtil } from '../util/array-util';
-import { Type } from '../util/type';
-import { MapData } from './map-data';
-import { Way } from '../way';
-import { PortalType } from '../model/portal-type/portal-type';
+import { Location } from '../../location';
+import { Geo } from '../../model/geo/geo';
+import { GeoBox } from '../../model/geo/geo-box';
+import { PortalType } from '../../model/portal-type/portal-type';
+import { Portal } from '../../model/portal/portal';
+import { ArrayUtil } from '../../util/array-util';
+import { Type } from '../../util/type';
+import { Way } from '../../way';
+import { MapDataSource } from './map-data-source';
 
-export class OverpassMapData implements MapData {
-    private readonly url = 'https://overpass-api.de/api/interpreter';
+export class OverpassApiMapDataSource implements MapDataSource {
+    private readonly url: string;
+
+    public constructor(url: string) {
+        this.url = url;
+    }
 
     public async getPortalsNear(
         location: Location,
@@ -87,9 +92,13 @@ export class OverpassMapData implements MapData {
                             Type.defined(wayNode.lon),
                         ),
                 );
+                const { center } = new Way(wayLocations);
+                if (Geo.distance(center, location) > radiusMeters) {
+                    return undefined;
+                }
 
                 return new Portal(
-                    new Way(wayLocations).center,
+                    center,
                     wayDefinition.tags.name,
                     new PortalType(waySubtype.toUpperCase(), waySubtype),
                 );

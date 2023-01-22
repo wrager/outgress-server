@@ -1,5 +1,6 @@
 import { Location } from '../../location';
 import { PortalType } from '../portal-type/portal-type';
+import { PortalTypeData } from '../portal-type/portal-type-data';
 import { PortalData } from './portal-data';
 
 export class Portal implements PortalData {
@@ -13,6 +14,11 @@ export class Portal implements PortalData {
         this.type = type;
     }
 
+    public get id(): string {
+        // TODO: use OSM id
+        return `${this.latitude};${this.longitude};${this.name};${this.type.osmType}`;
+    }
+
     public get latitude(): number {
         return this.location.latitude;
     }
@@ -23,12 +29,12 @@ export class Portal implements PortalData {
 
     public static fromData(
         data: PortalData,
-        getPortalType: () => PortalType,
+        getPortalTypeData: () => PortalTypeData,
     ): Portal {
         return new Portal(
             new Location(data.latitude, data.longitude),
             data.name,
-            getPortalType(),
+            PortalType.fromData(getPortalTypeData()),
         );
     }
 

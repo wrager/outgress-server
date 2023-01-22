@@ -5,6 +5,11 @@ export class Type {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static assertNever(expression: never): void {
+        // NOP
+    }
+
     public static defined<T>(expression: T): NonNullable<T> {
         if (expression === null || expression === undefined) {
             throw Type.getAssertionError();
