@@ -1,0 +1,38 @@
+{
+  "name": "outgress-server",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "npm run lint && npm test && npm run build:ts",
+    "build:ts": "tsc",
+    "lint": "eslint src --ext .ts",
+    "lint-fix": "npm run lint -- --fix",
+    "start": "ts-node src/index.ts",
+    "test:i": "jest itests",
+    "test:u": "jest src",
+    "test": "npm run test:u && npm run test:i"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wrager/outgress-server.git"
+  },
+  "author": "Alexander Filimonov <w.filaa@gmail.com> (https://www.linkedin.com/in/alexander-filimonov/)",
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/wrager/outgress-server/issues"
+  },
+  "homepage": "https://github.com/wrager/outgress-server#readme",
+  "devDependencies": {
+    "@types/jsdom": "20.0.1",
+    "@types/koa": "2.13.5",
+    "@types/node-fetch": "2.6.2",
+    "ts-node": "10.9.1"
+  },
+  "dependencies": {
+    "jsdom": "21.0.0",
+    "koa": "2.14.1",
+    "node-fetch": "2.6.7",
+    "sequelize": "6.28.0",
+    "sqlite3": "5.1.4"
+  }
+}

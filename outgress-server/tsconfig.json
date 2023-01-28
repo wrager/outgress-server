@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "outgress-lib/*": ["../outgress-lib/src/*"],
+      "outgress-server/*": ["./src/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "../outgress-lib"
+    }
+  ]
+}
